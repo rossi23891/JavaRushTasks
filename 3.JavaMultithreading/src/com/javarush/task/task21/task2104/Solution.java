@@ -14,15 +14,32 @@ public class Solution {
         this.last = last;
     }
 
-    public boolean equals(Solution n) {
+    public boolean equals(Object n) {
         if (this == n) return true;
-        if (n == null || getClass() != n.getClass()) return false;
+        if (n == null || !(n instanceof Solution)) return false;
+        Solution solution = (Solution)n;
+        if(solution.first!=null? !solution.first.equals(first):first!=null){
+            return false;
+        }
+        if(solution.last!=null? !solution.last.equals(last):last!=null){
+            return false;
+        }
 
-        return n.first.equals(first) && n.last.equals(last);
+        return true;
     }
 
+
+
     public int hashCode() {
-        return 31 * first.hashCode() + last.hashCode();
+        int hashCode = 0;
+        if(first!=null){
+            hashCode = 31*first.hashCode();
+        }
+        if(last!=null){
+            hashCode=hashCode+last.hashCode();
+        }
+
+        return hashCode;
     }
 
     public static void main(String[] args) {
