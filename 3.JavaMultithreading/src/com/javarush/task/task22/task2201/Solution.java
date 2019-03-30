@@ -36,46 +36,36 @@ public class Solution {
     }
 
     public synchronized String getPartOfString(String string, String threadName) {
-        ArrayList<Integer> tabsInds = new ArrayList<>();
-        RuntimeException e;
-        Thread.UncaughtExceptionHandler exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        if (string == null) {// прописать исключения
-            if (Solution.FIRST_THREAD_NAME.equals(threadName)) {
-                e = new StringForFirstThreadTooShortException();
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            } else if (Solution.SECOND_THREAD_NAME.equals(threadName)) {
-                e = new StringForSecondThreadTooShortException();
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
+        try{
+            ArrayList<Integer> tabsInds = new ArrayList<>();
+            for (int i = 0; i < string.length(); i++) {
+                if (string.charAt(i)==9){
+                    tabsInds.add(i);
+                }
+            }
+            int startIndex = tabsInds.get(0)+1;
+            int endIndex = tabsInds.get(tabsInds.size()-1);
+            String result = null;
+            if(startIndex==endIndex){
+                result="";
+            }else{
+                result= string.substring(startIndex,endIndex);
+            }
+            return result;
+        }catch(Exception e){
+            if (threadName.equals(FIRST_THREAD_NAME)) {
+                StringForFirstThreadTooShortException e1 = new StringForFirstThreadTooShortException();
+                e1.initCause(e);
+                throw e1;
+            } else if (threadName.equals(SECOND_THREAD_NAME)) {
+                StringForSecondThreadTooShortException e2 = new StringForSecondThreadTooShortException();
+                e2.initCause(e);
+                throw e2;
             } else {
-                e = new RuntimeException();
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
+                RuntimeException e3 = new RuntimeException();
+                e3.initCause(e);
+                throw e3;
             }
         }
-        for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i)==9){
-                tabsInds.add(i);
-            }
-        }
-        if(tabsInds.isEmpty()||tabsInds.size()<2){
-            if (Solution.FIRST_THREAD_NAME.equals(threadName)) {
-                e = new StringForFirstThreadTooShortException();
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            } else if (Solution.SECOND_THREAD_NAME.equals(threadName)) {
-                e = new StringForSecondThreadTooShortException();
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            } else {
-                e = new RuntimeException();
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            }
-        }
-        int startIndex = tabsInds.get(0)+1;
-        int endIndex = tabsInds.get(tabsInds.size()-1);
-        String result = null;
-        if(startIndex==endIndex){
-            result="";
-        }else{
-            result= string.substring(startIndex,endIndex);
-        }
-        return result;
     }
 }
