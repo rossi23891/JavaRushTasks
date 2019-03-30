@@ -4,10 +4,7 @@ package com.javarush.task.task22.task2203;
 Между табуляциями
 */
 public class Solution {
-<<<<<<< HEAD
-    public static String getPartOfString(String string) {
-        return null;
-=======
+
     public static String getPartOfString(String string) throws TooShortStringException {
         if(string==null){
             throw new TooShortStringException();
@@ -31,21 +28,17 @@ public class Solution {
         String result = string.substring(startIndex,endIndex);
 
         return result;
->>>>>>> origin/master
     }
 
     public static class TooShortStringException extends Exception {
     }
 
-    public static void main(String[] args) throws TooShortStringException {
-<<<<<<< HEAD
-        System.out.println(getPartOfString("\tJavaRush - лучший сервис \tобучения Java\t."));
-=======
+    public static void main(String[] args) throws TooShortStringException{
+
         try{
             System.out.println(getPartOfString(""));
         } catch (TooShortStringException e){
             System.out.println("incorrect string");
         }
->>>>>>> origin/master
     }
 }
