@@ -3,7 +3,7 @@ package com.javarush.task.task22.task2208;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
+
 
 /* 
 Формируем WHERE
@@ -11,9 +11,9 @@ import java.util.TreeMap;
 public class Solution {
     public static void main(String[] args) {
         Map<String,String> params = new LinkedHashMap<>();
-        params.put("name","Ivanov");
-        params.put("country","Ukraine");
-        params.put("city","Kiev");
+        params.put("name",null);
+        params.put("country",null);
+        params.put("city",null);
         params.put("age",null);
         System.out.println(getQuery(params));
     }
@@ -29,7 +29,10 @@ public class Solution {
                 sb.append("' and ");
             }
         }
-
+        if(!sb.toString().equals("")){
+            int i = sb.lastIndexOf(" and ");
+            sb.replace(i,sb.length(),"");
+        }
         return sb.toString();
     }
 }
