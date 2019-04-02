@@ -24,26 +24,32 @@ public class Solution {
         //...
         StringBuilder result = getLine(words);
         System.out.println(result.toString());
-
     }
 
+
     public static StringBuilder getLine(String...words) {
+        String[] toSB=null;
         if(words.length==0){
             return new StringBuilder();
-        }else if(words.length==1){
+        }
+        if(words.length==1){
             return new StringBuilder(words[0]);
         }
         for (int i = 0; i <words.length ; i++) {
-            String word = words[i];
-
+            String w = words[i];
+            String[]result = findChainForHeadAndTail(w,dropElementWithIndex(i,words));
+            if(result.length == words.length-1){
+                toSB = concateArray(w,result);
+            }
         }
-
-
-
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < toSB.length ; i++) {
+            sb.append(toSB[i]).append(" ");
+        }
+        return  sb;
     }
 
-    public String[] findChainForHeadAndTail(String head,String[]tail){
+    private static String[] findChainForHeadAndTail(String head,String[]tail){
         if(tail.length==0){
             return new String[0];
         }
@@ -66,7 +72,7 @@ public class Solution {
        return  new String[0];
     }
 
-    public String[] dropElementWithIndex(int i,String[]words){// функция создает массив размера на 1 меньше изначального, из него удалено нужное слово
+    private static String[] dropElementWithIndex(int i,String[]words){// функция создает массив размера на 1 меньше изначального, из него удалено нужное слово
         List<String> updated = new ArrayList<>();
         for (int j = 0; j <words.length ; j++) {
             if(j!=i){
@@ -76,7 +82,7 @@ public class Solution {
         return updated.toArray(new String[words.length-1]);
     }
 
-    public String[] concateArray(String head,String[]tail){// собираем большой массив обратно
+    private static String[] concateArray(String head,String[]tail){// собираем большой массив обратно
         List<String> concated = new ArrayList<>();
         for (String s : tail) {
             concated.add(s);
@@ -84,6 +90,5 @@ public class Solution {
         concated.add(0,head);
         return concated.toArray(new String[tail.length+1]);
     }
-
 
 }
