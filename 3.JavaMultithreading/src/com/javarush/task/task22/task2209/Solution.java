@@ -24,6 +24,7 @@ public class Solution {
         //...
         StringBuilder result = getLine(words);
         System.out.println(result.toString());
+
     }
 
     public static StringBuilder getLine(String...words) {
@@ -32,50 +33,56 @@ public class Solution {
         }else if(words.length==1){
             return new StringBuilder(words[0]);
         }
-        ArrayList<String> temp = new ArrayList<>(Arrays.asList(words));
-        Collections.sort(temp);
-        ArrayList<String> result = new ArrayList<>();
-        for (int i = 0; i <temp.size()-1 ; i++) {
-            for (int j = i+1; j <temp.size() ; j++) {
-                char wd = temp.get(i).toLowerCase().charAt(temp.get(i).length()-1);
-                char wd1 = temp.get(j).toLowerCase().charAt(0);
-                if(wd== wd1){
-                    result.add(temp.get(i));
-                    result.add(temp.get(j));
-                    temp.remove(j);
-                    temp.remove(i);
-                    j=temp.size();
-                    i=temp.size();
+        for (int i = 0; i <words.length ; i++) {
+            String word = words[i];
+
+        }
+
+
+
+        return null;
+    }
+
+    public String[] findChainForHeadAndTail(String head,String[]tail){
+        if(tail.length==0){
+            return new String[0];
+        }
+        if(tail.length==1){
+            if(tail[0].toLowerCase().charAt(0)== head.toLowerCase().charAt(head.length()-1)){
+                return tail;
+            }else{
+                return new String[0];
+            }
+        }
+        for (int i = 0; i <tail.length ; i++) {
+            String wd = tail[i];
+            if(wd.toLowerCase().charAt(0)== head.toLowerCase().charAt(head.length()-1)){
+                String[]result = findChainForHeadAndTail(wd,dropElementWithIndex(i,tail));
+                if(result.length == tail.length-1){
+                    return concateArray(wd,result);
                 }
             }
         }
-        for (int i = 0; i <temp.size() ;) {
-            char wd = result.get(result.size()-1).toLowerCase().charAt(result.get(result.size()-1).length()-1);
-            char wd1 = temp.get(i).toLowerCase().charAt(0);
-            char wd2 =result.get(0).toLowerCase().charAt(0);
-            char wd3 = temp.get(i).toLowerCase().charAt(temp.get(i).length()-1);
-            if(wd==wd1){
-                result.add(temp.get(i));
-                temp.remove(i);
-                i=0;
-            }else if(wd2==wd3){
-                result.add(0,temp.get(i));
-                temp.remove(i);
-                i=0;
-            }
-            else{
-                i++;
+       return  new String[0];
+    }
+
+    public String[] dropElementWithIndex(int i,String[]words){// функция создает массив размера на 1 меньше изначального, из него удалено нужное слово
+        List<String> updated = new ArrayList<>();
+        for (int j = 0; j <words.length ; j++) {
+            if(j!=i){
+                updated.add(words[j]);
             }
         }
-        for (String s : temp) {
-            result.add(s);
+        return updated.toArray(new String[words.length-1]);
+    }
+
+    public String[] concateArray(String head,String[]tail){// собираем большой массив обратно
+        List<String> concated = new ArrayList<>();
+        for (String s : tail) {
+            concated.add(s);
         }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i <result.size()-1; i++) {
-            sb.append(result.get(i)).append(" ");
-        }
-        sb.append(result.get(result.size()-1));
-        return sb;
+        concated.add(0,head);
+        return concated.toArray(new String[tail.length+1]);
     }
 
 
