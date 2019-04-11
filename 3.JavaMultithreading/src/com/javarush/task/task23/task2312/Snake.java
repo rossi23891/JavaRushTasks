@@ -22,8 +22,26 @@ public class Snake {
         return sections.get(0).getY();
     }
 
-    public void move(){
+    public void move(int a,int b){
         
+    }
+    public void move(){
+        if(!isAlive()){
+            return;
+        }
+        if(direction.equals(SnakeDirection.UP)){
+            this.move(0,-1);
+        }
+        if(direction.equals(SnakeDirection.RIGHT)){
+            move(1,0);
+        }
+        if(direction.equals(SnakeDirection.DOWN)){
+            move(0,1);
+        }
+        if(direction.equals(SnakeDirection.LEFT)){
+            move(-1,0);
+        }
+
     }
 
     public List<SnakeSection> getSections() {
