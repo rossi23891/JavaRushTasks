@@ -1,10 +1,9 @@
 package com.javarush.task.task23.task2312;
 
-import java.util.Objects;
-
 public class SnakeSection {
     private int x;
     private int y;
+
 
     public SnakeSection(int x, int y) {
         this.x = x;
@@ -20,20 +19,22 @@ public class SnakeSection {
     }
 
     @Override
-    public int hashCode() {
-        int hashcode = 0;
-        hashcode = 31*x+y;
-        return hashcode;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SnakeSection that = (SnakeSection) o;
+
+        if (x != that.x) return false;
+        if (y != that.y) return false;
+
+        return true;
     }
 
     @Override
-    public boolean equals(Object obj) {
-         return Objects.equals(this,obj);
-    }
-
-    public void checkBorders(SnakeSection head){
-        if(head.getX()<0 || head.getY()<0){
-
-        }
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
     }
 }
