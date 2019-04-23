@@ -34,7 +34,7 @@ public class Solution implements Action {
                 firstClass.someAction();
             }
                 secondClass = new SecondClass();
-                secondClass.sb.append(SecondClass.SPECIFIC_ACTION_FOR_ANONYMOUS_SECOND_CLASS_PARAM).append(param).append(System.lineSeparator());
+                secondClass.sb.append(SecondClass.SPECIFIC_ACTION_FOR_ANONYMOUS_SECOND_CLASS_PARAM).append(param);
                 secondClass.someAction();
         }
     };
@@ -64,7 +64,6 @@ public class Solution implements Action {
      * Count of created Action objects is 3
      */
     public static void main(String[] args) {
-        System.out.println("data");
         Solution solution = new Solution(5);
         solution.someAction();
         System.out.println("Count of created Action objects is " + countActionObjects);
