@@ -1,8 +1,6 @@
 package com.javarush.task.task29.task2909.human;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class Student extends UniversityPerson {
     private double averageGrade;
@@ -12,7 +10,7 @@ public class Student extends UniversityPerson {
 
     public Student(String name, int age, double averageGrade) {
         super(name, age);
-        this.averageGrade = averageGrade;
+        this.setAverageGrade(averageGrade);
     }
 
     public void live() {
@@ -23,12 +21,8 @@ public class Student extends UniversityPerson {
 
     }
 
-    public void incAverageGradeBy01() {
-        averageGrade += 0.1;
-    }
-
-    public void incAverageGradeBy02() {
-        averageGrade += 0.2;
+    public void incAverageGrade(double delta) {
+        setAverageGrade(getAverageGrade() + delta);
     }
 
     public int getCourse() {
@@ -48,12 +42,12 @@ public class Student extends UniversityPerson {
         return "Студент";
     }
 
-    public void setBeginningOfSession(int day, int month, int year) {
-        beginningOfSession = new Date(year, month, day);
+    public void setBeginningOfSession(Date beginningSession) {
+        beginningOfSession = beginningSession;
     }
 
-    public void setEndOfSession(int day, int month, int year) {
-        endOfSession = new Date(year, month, day);
+    public void setEndOfSession(Date endSession) {
+        endOfSession = endSession;
     }
 
     public double getAverageGrade() {
