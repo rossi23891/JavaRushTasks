@@ -27,14 +27,14 @@ public abstract class Car {
 
     }
 
-    /*public static Car create(int type, int numberOfPassengers){
+    public static Car create(int type, int numberOfPassengers){
         switch (type){
             case 0: return new Truck(numberOfPassengers);
             case 1: return new Sedan(numberOfPassengers);
             case 2: return new Cabriolet(numberOfPassengers);
             default: return null;
         }
-    }*/
+    }
      public boolean isSummer(Date date , Date summerStart, Date summerEnd){
          return (date.after(summerStart) && date.before(summerEnd));
      }

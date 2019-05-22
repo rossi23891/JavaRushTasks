@@ -18,7 +18,7 @@ public class User {
     }
 
     private Work work;
-    //private Address address;
+    private Address address;
 
     public User(String name, String surname, int age) {
         this.name = name;
@@ -61,7 +61,7 @@ public class User {
         this.age = age;
     }
 
-    /*public String getCountry() {
+    public String getCountry() {
         return address.getCountry();
     }
 
@@ -80,7 +80,7 @@ public class User {
     public String getAddress() {
         return address.getCountry() + " " + address.getCity() + " " + address.getHouse();
     }
-*/
+
     public Work getWork() {
         return work;
     }
