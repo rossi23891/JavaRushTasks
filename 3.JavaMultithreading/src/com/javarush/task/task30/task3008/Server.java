@@ -3,8 +3,6 @@ package com.javarush.task.task30.task3008;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,7 +17,7 @@ public class Server {
             this.socket = socket;
         }
 
-        private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
+        private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException { // подключиться к чату
             String username;
             connection.send(new Message(MessageType.NAME_REQUEST, "Hi, who are you?"));
             while (true){
@@ -35,12 +33,46 @@ public class Server {
             }
         }
 
-        private void notifyUsers(Connection connection, String userName) throws IOException{
+        private void notifyUsers(Connection connection, String userName) throws IOException{// оповещать нового участника об остальных участниках чата
             for(String user: connectionMap.keySet()){
                 if(!user.equals(userName)){
                     connection.send(new Message(MessageType.USER_ADDED,user));
                 }
             }
+        }
+
+        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException{// обработка сообщений сервером
+            while(true){
+                Message message = connection.receive();
+                if(message.getType()==MessageType.TEXT){
+                    sendBroadcastMessage(new Message(MessageType.TEXT,userName + ": " + message.getData()));
+                }else{
+                    ConsoleHelper.writeMessage("Ошибка");
+                }
+            }
+        }
+
+        @Override
+        public void run() {
+            Connection connection = null;
+            try{
+                connection = new Connection(socket);
+                ConsoleHelper.writeMessage("Установлено новое соединенис с адресом" + connection.getRemoteSocketAddress());
+                String userName = serverHandshake(connection);
+                sendBroadcastMessage(new Message(MessageType.USER_ADDED,userName));
+                notifyUsers(connection,userName);
+                serverMainLoop(connection,userName);
+
+            } catch (IOException | ClassNotFoundException e) {
+                try {
+                    connection.close();
+                } catch (IOException e1) {
+
+                }
+            }
+
+
+
         }
     }
 
@@ -57,7 +89,7 @@ public class Server {
         }
     }
 
-    public static void sendBroadcastMessage(Message message) {
+    public static void sendBroadcastMessage(Message message) {// оповещать всех участников, отправлять сообщения
         for (Connection connection : connectionMap.values()) {
             try {
                 connection.send(message);
