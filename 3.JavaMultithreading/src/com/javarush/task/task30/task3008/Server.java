@@ -20,33 +20,33 @@ public class Server {
         private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException { // подключиться к чату
             String username;
             connection.send(new Message(MessageType.NAME_REQUEST, "Hi, who are you?"));
-            while (true){
+            while (true) {
                 Message message = connection.receive();
-                username=message.getData();
-                if (message.getType()==MessageType.USER_NAME && !username.equals("")&& !connectionMap.containsKey(username)) {
+                username = message.getData();
+                if (message.getType() == MessageType.USER_NAME && !username.equals("") && !connectionMap.containsKey(username)) {
                     connectionMap.put(username, connection);
-                    connection.send(new Message(MessageType.NAME_ACCEPTED,"You're welcome!"));
+                    connection.send(new Message(MessageType.NAME_ACCEPTED, "You're welcome!"));
                     return username;
-                }else{
+                } else {
                     connection.send(new Message(MessageType.NAME_REQUEST, "Hi, who are you? Please, enter your name again"));
                 }
             }
         }
 
-        private void notifyUsers(Connection connection, String userName) throws IOException{// оповещать нового участника об остальных участниках чата
-            for(String user: connectionMap.keySet()){
-                if(!user.equals(userName)){
-                    connection.send(new Message(MessageType.USER_ADDED,user));
+        private void notifyUsers(Connection connection, String userName) throws IOException {// оповещать нового участника об остальных участниках чата
+            for (String user : connectionMap.keySet()) {
+                if (!user.equals(userName)) {
+                    connection.send(new Message(MessageType.USER_ADDED, user));
                 }
             }
         }
 
-        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException{// обработка сообщений сервером
-            while(true){
+        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException {// обработка сообщений сервером
+            while (true) {
                 Message message = connection.receive();
-                if(message.getType()==MessageType.TEXT){
-                    sendBroadcastMessage(new Message(MessageType.TEXT,userName + ": " + message.getData()));
-                }else{
+                if (message.getType() == MessageType.TEXT) {
+                    sendBroadcastMessage(new Message(MessageType.TEXT, userName + ": " + message.getData()));
+                } else {
                     ConsoleHelper.writeMessage("Ошибка");
                 }
             }
@@ -54,25 +54,23 @@ public class Server {
 
         @Override
         public void run() {
-            Connection connection = null;
-            try{
-                connection = new Connection(socket);
-                ConsoleHelper.writeMessage("Установлено новое соединенис с адресом" + connection.getRemoteSocketAddress());
-                String userName = serverHandshake(connection);
-                sendBroadcastMessage(new Message(MessageType.USER_ADDED,userName));
-                notifyUsers(connection,userName);
-                serverMainLoop(connection,userName);
 
-            } catch (IOException | ClassNotFoundException e) {
-                try {
-                    connection.close();
-                } catch (IOException e1) {
-
-                }
+            String userName = null;
+            ConsoleHelper.writeMessage("Установлено новое соединенис с адресом" + socket.getRemoteSocketAddress());
+            try (Connection connection = new Connection(socket)){
+                userName = serverHandshake(connection);
+                sendBroadcastMessage(new Message(MessageType.USER_ADDED, userName));
+                notifyUsers(connection, userName);
+                serverMainLoop(connection, userName);
+            } catch (IOException |ClassNotFoundException e) {
+                ConsoleHelper.writeMessage("Произошла ошибка при обмене данными");
+            }
+            if(userName!=null){
+                connectionMap.remove(userName);
+                sendBroadcastMessage(new Message(MessageType.USER_REMOVED, userName));
             }
 
-
-
+            ConsoleHelper.writeMessage("Соединение с удаленным адресом" + socket.getRemoteSocketAddress()+ "закрыто");
         }
     }
 
