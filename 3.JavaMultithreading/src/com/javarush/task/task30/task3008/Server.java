@@ -20,23 +20,27 @@ public class Server {
         }
 
         private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
+            String username;
             connection.send(new Message(MessageType.NAME_REQUEST, "Hi, who are you?"));
-            Message message = connection.receive();
-            if (!message.getType().equals(MessageType.USER_NAME)) {
-                serverHandshake(connection);
+            while (true){
+                Message message = connection.receive();
+                username=message.getData();
+                if (message.getType()==MessageType.USER_NAME && !username.equals("")&& !connectionMap.containsKey(username)) {
+                    connectionMap.put(username, connection);
+                    connection.send(new Message(MessageType.NAME_ACCEPTED,"You're welcome!"));
+                    return username;
+                }else{
+                    connection.send(new Message(MessageType.NAME_REQUEST, "Hi, who are you? Please, enter your name again"));
+                }
             }
+        }
 
-            String userName = message.getData();
-            if (userName.equals("")) {
-                serverHandshake(connection);
+        private void notifyUsers(Connection connection, String userName) throws IOException{
+            for(String user: connectionMap.keySet()){
+                if(!user.equals(userName)){
+                    connection.send(new Message(MessageType.USER_ADDED,user));
+                }
             }
-            if (connectionMap.containsKey(userName)) {
-                serverHandshake(connection);
-            }
-
-            connectionMap.put(userName, connection);
-            connection.send(new Message(MessageType.NAME_ACCEPTED,"You're welcome!"));
-            return userName;
         }
     }
 
