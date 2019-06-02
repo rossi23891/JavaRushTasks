@@ -47,7 +47,7 @@ public class Server {
                 if (message.getType() == MessageType.TEXT) {
                     sendBroadcastMessage(new Message(MessageType.TEXT, userName + ": " + message.getData()));
                 } else {
-                    ConsoleHelper.writeMessage("Ошибка");
+                    ConsoleHelper.writeMessage("Error");
                 }
             }
         }
@@ -56,27 +56,28 @@ public class Server {
         public void run() {
 
             String userName = null;
-            ConsoleHelper.writeMessage("Установлено новое соединенис с адресом" + socket.getRemoteSocketAddress());
+            ConsoleHelper.writeMessage("New address was connected" + socket.getRemoteSocketAddress());
             try (Connection connection = new Connection(socket)){
                 userName = serverHandshake(connection);
                 sendBroadcastMessage(new Message(MessageType.USER_ADDED, userName));
                 notifyUsers(connection, userName);
                 serverMainLoop(connection, userName);
             } catch (IOException |ClassNotFoundException e) {
-                ConsoleHelper.writeMessage("Произошла ошибка при обмене данными");
+                ConsoleHelper.writeMessage("Data exchange error");
+                e.printStackTrace();
             }
             if(userName!=null){
                 connectionMap.remove(userName);
                 sendBroadcastMessage(new Message(MessageType.USER_REMOVED, userName));
             }
 
-            ConsoleHelper.writeMessage("Соединение с удаленным адресом" + socket.getRemoteSocketAddress()+ "закрыто");
+            ConsoleHelper.writeMessage("Remote address was connected" + socket.getRemoteSocketAddress()+ "закрыто");
         }
     }
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(ConsoleHelper.readInt());
-        ConsoleHelper.writeMessage("Сервер запущен");
+        ConsoleHelper.writeMessage("Server has been started");
         try {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
@@ -92,7 +93,7 @@ public class Server {
             try {
                 connection.send(message);
             } catch (IOException e) {
-                System.out.println("Сообщение не отправлено");
+                System.out.println("Message is not sent");
             }
         }
     }
