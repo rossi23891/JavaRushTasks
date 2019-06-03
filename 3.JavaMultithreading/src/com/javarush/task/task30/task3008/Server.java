@@ -64,7 +64,6 @@ public class Server {
                 serverMainLoop(connection, userName);
             } catch (IOException |ClassNotFoundException e) {
                 ConsoleHelper.writeMessage("Data exchange error");
-                e.printStackTrace();
             }
             if(userName!=null){
                 connectionMap.remove(userName);
