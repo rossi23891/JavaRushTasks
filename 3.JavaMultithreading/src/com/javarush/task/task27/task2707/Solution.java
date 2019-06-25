@@ -41,8 +41,9 @@ public class Solution {
         Thread.sleep(2000);
         if(t2.getState()!= Thread.State.BLOCKED){
             return true;
+        }else{
+            return false;
         }
-        return false;
     }
 
     public static void main(String[] args) throws Exception {
