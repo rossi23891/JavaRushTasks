@@ -1,21 +1,49 @@
 package com.javarush.task.task31.task3110;
 
 import com.javarush.task.task31.task3110.command.ExitCommand;
+import com.javarush.task.task31.task3110.exception.WrongZipFileException;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.file.Paths;
+import java.io.IOException;
 
 public class Archiver {
-    public static void main(String[] args) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Please, enter archive directory");
-        String archivePath = reader.readLine();// ввод полного пути архива,где будем хранить данные
+    public static void main(String[] args){
+        Operation operation = null;
+        do {
+            try {
+                operation = askOperation();
+                CommandExecutor.execute(operation);
+            } catch (WrongZipFileException e) {
+                ConsoleHelper.writeMessage("Вы не выбрали файл архива или выбрали неверный файл.");
+            } catch (Exception e) {
+                ConsoleHelper.writeMessage("Произошла ошибка. Проверьте введенные данные.");
+            }
+        } while (operation != (Operation.EXIT));
+    }
 
-        ZipFileManager zipFileManager = new ZipFileManager(Paths.get(archivePath));
-        System.out.println("Please, enter directory to file to be archived");
-        String filePath = reader.readLine(); //ввод пути к файлу, кот архивируем
-        zipFileManager.createZip(Paths.get(filePath));
-        new ExitCommand().execute();
+    public static Operation askOperation() throws IOException {
+        Operation operation = null;
+        ConsoleHelper.writeMessage("Выберите операцию:\n" +
+                "0 - упаковать файлы в архив\n" +
+                "1 - добавить файл в архив\n" +
+                "2 - удалить файл из архива\n" +
+                "3 - распаковать архив\n" +
+                "4 - просмотреть содержимое архива\n" +
+                "5 - выход");
+
+        int userOperation = ConsoleHelper.readInt();
+        if (userOperation == Operation.CREATE.ordinal()) {
+            operation = Operation.CREATE;
+        } else if (userOperation == Operation.ADD.ordinal()) {
+            operation = Operation.ADD;
+        } else if (userOperation == Operation.REMOVE.ordinal()) {
+            operation = Operation.REMOVE;
+        } else if (userOperation == Operation.EXTRACT.ordinal()) {
+            operation = Operation.EXTRACT;
+        } else if (userOperation == Operation.CONTENT.ordinal()) {
+            operation = Operation.CONTENT;
+        } else if (userOperation == Operation.EXIT.ordinal()) {
+            operation = Operation.EXIT;
+        }
+        return operation;
     }
 }
