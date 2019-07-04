@@ -8,12 +8,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class Solution {
     public static void main(String[] args) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(args[0]);
-        Map <Character,Integer> frequency = new TreeMap<>();
+        Map<Character,Integer> frequency = new TreeMap<>();
         while(fileInputStream.available()>0){
             int data = fileInputStream.read();
             if(!frequency.containsKey((char)data)){
