@@ -78,16 +78,23 @@ public class ZipFileManager {
         if(!Files.isRegularFile(zipFile)){
             throw new WrongZipFileException();
         }
-        List<FileProperties> propList = new ArrayList<>();
+        List<FileProperties> propList = new ArrayList<>();// сюда будем складывать свойства файлов
         try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(zipFile))) {
-            while (zipInputStream.available()>0){
-                ZipEntry zipEntry = zipInputStream.getNextEntry();
+            ZipEntry zipEntry;
+            String name;
+            long size;
+            long compressedSize;
+            int compressionMethod;
+            while ((zipEntry=zipInputStream.getNextEntry())!=null){
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 copyData(zipInputStream,baos);
-
-
+                name = zipEntry.getName();
+                size = zipEntry.getSize();
+                compressedSize = zipEntry.getCompressedSize();
+                compressionMethod = zipEntry.getMethod();
+                propList.add(new FileProperties(name,size,compressedSize,compressionMethod));
             }
         }
-
+        return propList;
     }
 }
