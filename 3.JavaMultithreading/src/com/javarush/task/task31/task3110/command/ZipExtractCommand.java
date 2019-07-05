@@ -2,7 +2,6 @@ package com.javarush.task.task31.task3110.command;
 
 import com.javarush.task.task31.task3110.ConsoleHelper;
 import com.javarush.task.task31.task3110.ZipFileManager;
-import com.javarush.task.task31.task3110.command.ZipCommand;
 import com.javarush.task.task31.task3110.exception.PathIsNotFoundException;
 
 import java.nio.file.Path;
@@ -16,15 +15,14 @@ public class ZipExtractCommand extends ZipCommand {
 
             ZipFileManager zipFileManager = getZipFileManager();
 
-            ConsoleHelper.writeMessage("Введите полное имя файла или директории, куда нужно распаковать файл:");
+            ConsoleHelper.writeMessage("Введите путь для распаковки:");
             Path destinationPath = Paths.get(ConsoleHelper.readString());
             zipFileManager.extractAll(destinationPath);
 
-            ConsoleHelper.writeMessage("Архив распакован.");
+            ConsoleHelper.writeMessage("Архив был распакован.");
 
         } catch (PathIsNotFoundException e) {
-            ConsoleHelper.writeMessage("Вы неверно указали имя файла или директории.");
+            ConsoleHelper.writeMessage("Неверный путь для распаковки.");
         }
-
     }
 }
