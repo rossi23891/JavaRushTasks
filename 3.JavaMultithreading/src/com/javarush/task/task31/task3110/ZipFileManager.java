@@ -105,22 +105,26 @@ public class ZipFileManager {
         if (!Files.isRegularFile(zipFile)) {
             throw new WrongZipFileException();
         }
-        if (Files.notExists(outputFolder)) {
-            Files.createDirectories(outputFolder);
-        }
         try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(zipFile))) {
-            ZipEntry zipEntry;
+            if (Files.notExists(outputFolder)) {
+                Files.createDirectories(outputFolder);
+            }
+            ZipEntry zipEntry = zipInputStream.getNextEntry();
 
-            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+            while (zipEntry != null) {
                 // считываем каждую запись в потоке
                 Path fullOutputPath = outputFolder.resolve(zipEntry.getName());
-                if(Files.notExists(fullOutputPath.getParent())){
-                    Files.createDirectory(fullOutputPath.getParent());
+                Path outputParent = fullOutputPath.getParent();
+
+                if(Files.notExists(outputParent)){
+                    Files.createDirectories(outputParent);
                 }
                 try (OutputStream outputStream = Files.newOutputStream(fullOutputPath)) {
                     copyData(zipInputStream,outputStream);
                 }
+                zipEntry = zipInputStream.getNextEntry();
             }
+            zipInputStream.closeEntry();
         }
     }
 }
