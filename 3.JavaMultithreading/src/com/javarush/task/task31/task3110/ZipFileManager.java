@@ -99,4 +99,28 @@ public class ZipFileManager {
             out.write(buffer, 0, len);
         }
     }
+
+    public void extractAll(Path outputFolder) throws Exception {
+        //куда будем распаковывать
+        if (!Files.isRegularFile(zipFile)) {
+            throw new WrongZipFileException();
+        }
+        if (Files.notExists(outputFolder)) {
+            Files.createDirectories(outputFolder);
+        }
+        try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(zipFile))) {
+            ZipEntry zipEntry;
+
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                // считываем каждую запись в потоке
+                Path fullOutputPath = outputFolder.resolve(zipEntry.getName());
+                if(Files.notExists(fullOutputPath.getParent())){
+                    Files.createDirectory(fullOutputPath.getParent());
+                }
+                try (OutputStream outputStream = Files.newOutputStream(fullOutputPath)) {
+                    copyData(zipInputStream,outputStream);
+                }
+            }
+        }
+    }
 }
