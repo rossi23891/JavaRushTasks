@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -131,10 +134,32 @@ public class ZipFileManager {
         }
     }
 
-    public void removeFiles(List<Path> pathList) throws Exception{
+    public void removeFiles(List<Path> pathList) throws Exception {
         //В pathList будет передаваться список относительных путей на файлы внутри архива.
-        if (Files.notExists(zipFile)) {
+        if (!Files.isRegularFile(zipFile)) {
             throw new WrongZipFileException();
         }
+        Path temp = Files.createTempFile(zipFile.toString(), ".tmp");
+
+        try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(zipFile)); ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(temp))) {
+            ZipEntry zipEntry = zipInputStream.getNextEntry();
+            while (zipEntry != null) {
+                if (pathList.contains(Paths.get(zipEntry.getName()))) {
+                    ConsoleHelper.writeMessage("Файл" + zipEntry.getName() + "удален.");
+                } else {
+                    zipOutputStream.putNextEntry(new ZipEntry(zipEntry.getName()));
+                    copyData(zipInputStream,zipOutputStream);
+                    zipOutputStream.closeEntry();
+                }
+
+                zipEntry = zipInputStream.getNextEntry();
+            }
+            Files.move(temp,zipFile, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
-}
+
+        public void removeFile (Path path) throws Exception {
+            List<Path> pathList = Collections.singletonList(path);
+            removeFiles(pathList);
+        }
+    }
