@@ -29,7 +29,7 @@ public class Solution {
             case "E2":
                 System.out.println(String.format("it's %s.%s",objtype,obj.name()));
                 break;
-                default: System.out.println("undefined");
+            default: System.out.println("undefined");
         }
     }
 }
