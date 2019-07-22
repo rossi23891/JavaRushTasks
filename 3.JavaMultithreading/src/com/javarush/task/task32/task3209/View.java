@@ -27,6 +27,9 @@ public class View extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
     }
+    public void selectedTabChanged(){
+
+    }
 
     public void init(){
         initGui();
