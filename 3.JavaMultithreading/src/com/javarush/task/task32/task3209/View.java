@@ -2,8 +2,10 @@ package com.javarush.task.task32.task3209;
 
 import com.javarush.task.task32.task3209.listeners.FrameListener;
 import com.javarush.task.task32.task3209.listeners.TabbedPaneChangeListener;
+import com.javarush.task.task32.task3209.listeners.UndoListener;
 
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,16 +18,18 @@ public class View extends JFrame implements ActionListener {
     private JTextPane htmlTextPane = new JTextPane();
     //компонент для редактирования html в виде текста, он будет отображать код html
     private JEditorPane plainTextPane = new JEditorPane();
+    private UndoManager undoManager = new UndoManager();
+    private UndoListener undoListener = new UndoListener(undoManager);
 
     public Controller getController() {
         return controller;
     }
 
     public View() {
-        try{
-           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e){
-           ExceptionHandler.log(e);
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            ExceptionHandler.log(e);
         }
     }
 
@@ -37,53 +41,78 @@ public class View extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
     }
-    public void selectedTabChanged(){
+
+    public void selectedTabChanged() {
 
     }
 
-    public boolean canUndo(){
-        return false;
+    public boolean canUndo() {
+        return undoManager.canUndo();
     }
 
-    public boolean canRedo(){
-        return false;
+    public UndoListener getUndoListener() {
+        return undoListener;
     }
 
-    public void init(){
+    public boolean canRedo() {
+        return undoManager.canRedo();
+    }
+
+    public void init() {
         initGui();
         addWindowListener(new FrameListener(this));
         setVisible(true);
     }
 
-    public void exit(){
+    public void exit() {
         controller.exit();
     }
 
-    public void initGui(){// иниц. графический интерфейс
+    public void initGui() {// иниц. графический интерфейс
         initMenuBar();
         initEditor();
         pack();
     }
 
-    public void initMenuBar(){// инициализация меню редактора
+    public void initMenuBar() {// инициализация меню редактора
         JMenuBar menuBar = new JMenuBar();
-        MenuHelper.initFileMenu(this,menuBar);
-        MenuHelper.initEditMenu(this,menuBar);
-        MenuHelper.initStyleMenu(this,menuBar);
-        MenuHelper.initAlignMenu(this,menuBar);
-        MenuHelper.initColorMenu(this,menuBar);
-        MenuHelper.initFontMenu(this,menuBar);
-        MenuHelper.initHelpMenu(this,menuBar);
-        getContentPane().add(menuBar,BorderLayout.NORTH);
+        MenuHelper.initFileMenu(this, menuBar);
+        MenuHelper.initEditMenu(this, menuBar);
+        MenuHelper.initStyleMenu(this, menuBar);
+        MenuHelper.initAlignMenu(this, menuBar);
+        MenuHelper.initColorMenu(this, menuBar);
+        MenuHelper.initFontMenu(this, menuBar);
+        MenuHelper.initHelpMenu(this, menuBar);
+        getContentPane().add(menuBar, BorderLayout.NORTH);
 
     }
 
-    public void initEditor(){// инициализация панелей редактора
+    public void initEditor() {// инициализация панелей редактора
         htmlTextPane.setContentType("text/html");
-        tabbedPane.addTab("HTML",new JScrollPane(htmlTextPane));
-        tabbedPane.addTab("Текст",new JScrollPane(plainTextPane));
-        tabbedPane.setPreferredSize(new Dimension(400,300));
+        tabbedPane.addTab("HTML", new JScrollPane(htmlTextPane));
+        tabbedPane.addTab("Текст", new JScrollPane(plainTextPane));
+        tabbedPane.setPreferredSize(new Dimension(400, 300));
         tabbedPane.addChangeListener(new TabbedPaneChangeListener(this));
-        getContentPane().add(tabbedPane,BorderLayout.CENTER);
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
+    }
+
+    public void undo() {
+        try {
+            undoManager.undo();
+        } catch (Exception e) {
+            ExceptionHandler.log(e);
+        }
+    }
+
+    public void redo() {
+        try {
+            undoManager.redo();
+        } catch (Exception e) {
+            ExceptionHandler.log(e);
+        }
+    }
+
+    public void resetUndo() {
+        undoManager.discardAllEdits();
     }
 }
