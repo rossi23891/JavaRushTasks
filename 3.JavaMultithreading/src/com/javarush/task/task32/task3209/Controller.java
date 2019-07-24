@@ -3,6 +3,7 @@ package com.javarush.task.task32.task3209;
 import com.javarush.task.task32.task3209.listeners.UndoListener;
 
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.undo.UndoManager;
@@ -71,5 +72,21 @@ public class Controller {
             ExceptionHandler.log(e);
         }
         return stringWriter.toString();
+    }
+
+    public void createNewDocument(){
+
+    }
+
+    public void openDocument(){
+
+    }
+
+    public void saveDocument(){
+
+    }
+
+    public void saveDocumentAs(){
+
     }
 }
