@@ -5,6 +5,7 @@ import com.javarush.task.task32.task3209.listeners.TabbedPaneChangeListener;
 import com.javarush.task.task32.task3209.listeners.UndoListener;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -31,6 +32,14 @@ public class View extends JFrame implements ActionListener {
         } catch (Exception e) {
             ExceptionHandler.log(e);
         }
+    }
+
+    public void update(){
+        htmlTextPane.setDocument(controller.getDocument());
+    }
+
+    public void showAbout(){
+        JOptionPane.showMessageDialog(null,"This is my first HTML program", "О программе",JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void setController(Controller controller) {
@@ -118,5 +127,10 @@ public class View extends JFrame implements ActionListener {
 
     public boolean isHtmlTabSelected(){
        return  (tabbedPane.getSelectedIndex()==0);
+    }
+
+    public void selectHtmlTab(){
+        tabbedPane.setSelectedIndex(0);
+        resetUndo();
     }
 }
