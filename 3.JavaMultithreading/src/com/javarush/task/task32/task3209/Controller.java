@@ -81,11 +81,36 @@ public class Controller {
     }
 
     public void openDocument() {
-
+        view.selectHtmlTab();
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new HTMLFileFilter());
+        chooser.showOpenDialog(view.getParent());
+        int choise = chooser.showOpenDialog(view);
+        if (choise == JFileChooser.APPROVE_OPTION) {
+            currentFile = chooser.getSelectedFile();
+            resetDocument();
+            view.setTitle(currentFile.getName());
+            try (FileReader reader = new FileReader(currentFile)) {
+                new HTMLEditorKit().read(reader,document,0);
+                view.resetUndo();
+            }
+            catch (Exception e) {
+                ExceptionHandler.log(e);
+            }
+        }
     }
 
     public void saveDocument() {
-
+        view.selectHtmlTab();
+        if (currentFile == null) {
+            saveDocumentAs();
+        } else {
+            try (FileWriter fileWriter = new FileWriter(currentFile)) {
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
+            } catch (Exception e) {
+                ExceptionHandler.log(e);
+            }
+        }
     }
 
     public void saveDocumentAs() {
@@ -94,11 +119,11 @@ public class Controller {
         chooser.setFileFilter(new HTMLFileFilter());
         chooser.showSaveDialog(view.getParent());
         int choise = chooser.showSaveDialog(view);
-        if(choise==JFileChooser.APPROVE_OPTION){
+        if (choise == JFileChooser.APPROVE_OPTION) {
             currentFile = chooser.getSelectedFile();
             view.setTitle(currentFile.getName());
             try (FileWriter fileWriter = new FileWriter(currentFile)) {
-                new HTMLEditorKit().write(fileWriter,document,0,document.getLength());
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
             } catch (Exception e) {
                 ExceptionHandler.log(e);
             }
