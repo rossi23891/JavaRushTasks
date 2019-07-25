@@ -31,11 +31,11 @@ public class Controller {
 
     }
 
-    public void init(){
-
+    public void init() {
+        createNewDocument();
     }
 
-    public void exit(){
+    public void exit() {
         System.exit(0);
     }
 
@@ -43,9 +43,9 @@ public class Controller {
         return document;
     }
 
-    public void resetDocument(){
+    public void resetDocument() {
         UndoListener undoListener = view.getUndoListener();
-        if(document!=null){
+        if (document != null) {
             document.removeUndoableEditListener(undoListener);
         }
         document = (HTMLDocument) new HTMLEditorKit().createDefaultDocument();
@@ -53,40 +53,44 @@ public class Controller {
         view.update();
     }
 
-    public void setPlainText(String text){
+    public void setPlainText(String text) {
         resetDocument();
         StringReader stringReader = new StringReader(text);
         try {
-            new HTMLEditorKit().read(stringReader,document,0);
+            new HTMLEditorKit().read(stringReader, document, 0);
         } catch (Exception e) {
-           ExceptionHandler.log(e);
+            ExceptionHandler.log(e);
         }
     }
 
-    public String getPlainText(){
+    public String getPlainText() {
         //должен получать текст из документа со всеми html тегами
         StringWriter stringWriter = new StringWriter();
         try {
-            new HTMLEditorKit().write(stringWriter,document,0,document.getLength());
+            new HTMLEditorKit().write(stringWriter, document, 0, document.getLength());
         } catch (Exception e) {
             ExceptionHandler.log(e);
         }
         return stringWriter.toString();
     }
 
-    public void createNewDocument(){
+    public void createNewDocument() {
+        view.selectHtmlTab();
+        resetDocument();
+        view.setTitle("HTML редактор");
+        view.resetUndo();
+        currentFile = null;
+    }
+
+    public void openDocument() {
 
     }
 
-    public void openDocument(){
+    public void saveDocument() {
 
     }
 
-    public void saveDocument(){
-
-    }
-
-    public void saveDocumentAs(){
+    public void saveDocumentAs() {
 
     }
 }
