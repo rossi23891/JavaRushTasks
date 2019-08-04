@@ -14,4 +14,14 @@ public class Order {//должна быть информация, относящ
         this.tablet = tablet;
         dishes = ConsoleHelper.getAllDishesForOrder();
     }
+
+    @Override
+    public String toString() {
+        if(dishes.isEmpty()){
+            return "";
+        }else{
+            return "Your order: " + dishes + " of " + tablet.toString() ;
+        }
+    }
+
 }
