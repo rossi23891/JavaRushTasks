@@ -20,8 +20,20 @@ public class Order {//должна быть информация, относящ
         if(dishes.isEmpty()){
             return "";
         }else{
-            return "Your order: " + dishes + " of " + tablet.toString() ;
+            return "Your order: " + dishes + " of " + tablet.toString() + ", cooking time " + getTotalCookingTime() + "min" ;
         }
+    }
+
+    public boolean isEmpty(){
+       return dishes.isEmpty();
+    }
+
+    public int getTotalCookingTime(){
+        int totalTime = 0;
+        for (Dish dish : dishes) {
+            totalTime+=dish.getDuration();
+        }
+        return totalTime;
     }
 
 }

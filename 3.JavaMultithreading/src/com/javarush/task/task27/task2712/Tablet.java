@@ -18,8 +18,10 @@ public class Tablet extends Observable {//планшет
         Order order=null;
         try {
              order = new Order(this);
-             setChanged();
-             notifyObservers(order);
+             if(!order.isEmpty()){
+                 setChanged();
+                 notifyObservers(order);
+             }
         } catch (IOException e) {
             logger.severe("Console is unavailable.");
         }
