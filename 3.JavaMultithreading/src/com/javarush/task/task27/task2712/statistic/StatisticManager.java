@@ -19,7 +19,7 @@ public class StatisticManager {
     private StatisticManager() {
     }
     public void register(EventDataRow data){
-
+        statisticStorage.put(data);
     }
 
     private class StatisticStorage{
@@ -27,9 +27,12 @@ public class StatisticManager {
 
         public StatisticStorage() {
             storage = new HashMap<>();
-            for(EventType eventType: storage.keySet()){
-                storage.put(eventType,new ArrayList<EventDataRow>());
+            for(int i = 0; i < EventType.values().length; i++){//это ж про enum
+                storage.put(EventType.values()[i],new ArrayList<EventDataRow>());
             }
+        }
+        private void put(EventDataRow data){
+            storage.get(data.getType()).add(data);
         }
     }
 }

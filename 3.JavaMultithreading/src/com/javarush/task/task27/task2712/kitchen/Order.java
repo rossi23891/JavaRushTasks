@@ -8,6 +8,15 @@ import java.util.List;
 
 public class Order {//должна быть информация, относящаяся к списку выбранных пользователем блюд
     private final Tablet tablet;
+
+    public Tablet getTablet() {
+        return tablet;
+    }
+
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
     protected List<Dish> dishes;
 
     public Order(Tablet tablet) throws IOException {
