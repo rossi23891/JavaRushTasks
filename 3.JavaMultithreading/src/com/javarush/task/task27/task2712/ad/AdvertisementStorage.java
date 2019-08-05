@@ -18,9 +18,9 @@ public class AdvertisementStorage {
         new Advertisement(someContent, "Third Video", 400, 2, 10 * 60); //10 min
     }
 
-    final List<Object> videos = new ArrayList<>();
+    final List<Advertisement> videos = new ArrayList<>();
 
-    public List<Object>list(){
+    public List<Advertisement>list(){
         return videos;
     }
 
