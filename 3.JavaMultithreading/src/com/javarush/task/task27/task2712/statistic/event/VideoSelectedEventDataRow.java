@@ -23,6 +23,10 @@ public class VideoSelectedEventDataRow implements EventDataRow {// event - вы�
         return EventType.SELECTED_VIDEOS;
     }
 
+    public long getAmount() {
+        return amount;
+    }
+
     @Override
     public Date getDate() {
         return null;

@@ -3,6 +3,7 @@ package com.javarush.task.task27.task2712.statistic;
 import com.javarush.task.task27.task2712.kitchen.Cook;
 import com.javarush.task.task27.task2712.statistic.event.EventDataRow;
 import com.javarush.task.task27.task2712.statistic.event.EventType;
+import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
 
 import java.util.*;
 
@@ -22,6 +23,31 @@ public class StatisticManager {
     }
     public void register(Cook cook){
        cooks.add(cook);
+    }
+
+    public Map<Date,Long> getAdvertisementProfitDataPerDay(Map <EventType, List<EventDataRow>> storage){
+        Map<Date,Long> profitPerDay = new HashMap<>();
+        List<EventDataRow> advertisementEvents = StatisticManager.getInstance().get().get(EventType.SELECTED_VIDEOS);
+        List<VideoSelectedEventDataRow> videoEvents = new ArrayList<>();
+        for (EventDataRow eventDataRow : advertisementEvents) {
+            if(eventDataRow instanceof VideoSelectedEventDataRow){
+                videoEvents.add((VideoSelectedEventDataRow)eventDataRow);
+            }
+        }
+        for (VideoSelectedEventDataRow videoEvent : videoEvents) {
+            if(!profitPerDay.containsKey(videoEvent.getDate())){
+                profitPerDay.put(videoEvent.getDate(),videoEvent.getAmount());
+            }else{
+                long newAmount = profitPerDay.get(videoEvent.getDate()) + videoEvent.getAmount();
+                profitPerDay.put(videoEvent.getDate(),newAmount);
+            }
+        }
+        return profitPerDay;
+    }
+
+
+    public Map <EventType, List<EventDataRow>> get(){// доступ к данным хранилища
+        return statisticStorage.storage;
     }
 
     private class StatisticStorage{

@@ -12,6 +12,10 @@ public class CookedOrderEventDataRow implements EventDataRow { // event - пов
     List<Dish> cookingDishs;// - список блюд для приготовления
     Date currentDate;
 
+    public String getCookName() {
+        return cookName;
+    }
+
     public CookedOrderEventDataRow(String tabletName, String cookName, int cookingTimeSeconds, List<Dish> cookingDishs) {
         this.tabletName = tabletName;
         this.cookName = cookName;
