@@ -2,8 +2,11 @@ package com.javarush.task.task27.task2712.statistic.event;
 
 import com.javarush.task.task27.task2712.ad.Advertisement;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class VideoSelectedEventDataRow implements EventDataRow {// event - выбрали набор видео-роликов для заказа
     List<Advertisement> optimalVideoSet;// - список видео-роликов, отобранных для показа
@@ -29,11 +32,11 @@ public class VideoSelectedEventDataRow implements EventDataRow {// event - вы�
 
     @Override
     public Date getDate() {
-        return null;
+        return currentDate;
     }
 
     @Override
     public int getTime() {
-        return 0;
+        return totalDuration;
     }
 }

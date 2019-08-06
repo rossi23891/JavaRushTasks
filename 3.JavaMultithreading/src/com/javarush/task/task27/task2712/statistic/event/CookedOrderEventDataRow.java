@@ -2,8 +2,11 @@ package com.javarush.task.task27.task2712.statistic.event;
 
 import com.javarush.task.task27.task2712.kitchen.Dish;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CookedOrderEventDataRow implements EventDataRow { // event - повар приготовил заказ
     String tabletName;// - имя планшета
@@ -31,11 +34,11 @@ public class CookedOrderEventDataRow implements EventDataRow { // event - пов
 
     @Override
     public Date getDate() {
-        return null;
+        return currentDate;
     }
 
     @Override
     public int getTime() {
-        return 0;
+        return cookingTimeSeconds;
     }
 }
