@@ -31,43 +31,54 @@ public class StatisticManager {
 
     public Map<String, Double> getAdvertisementProfitDataPerDay() {
         Map<String, Double> profitPerDay = new TreeMap<>(Collections.reverseOrder());
-        List<EventDataRow> advertisementEvents = statisticStorage.getStorage().get(EventType.SELECTED_VIDEOS);
-        SimpleDateFormat format = new SimpleDateFormat("dd-MMMM-yyyy", Locale.ENGLISH);
+        List<EventDataRow> advertisementEvents = statisticStorage.getAllRowsOfType(EventType.SELECTED_VIDEOS);
+        SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         for (EventDataRow ad : advertisementEvents) {
             VideoSelectedEventDataRow videoEvent = (VideoSelectedEventDataRow) ad;
             String dateVideo = format.format(videoEvent.getDate());
             if (!profitPerDay.containsKey(dateVideo)) {
-                profitPerDay.put(dateVideo, Double.valueOf(videoEvent.getAmount()));
+                profitPerDay.put(dateVideo, videoEvent.getAmount()/100.0);
             } else {
-                double newAmount = profitPerDay.get(dateVideo) + videoEvent.getAmount();
+                double newAmount = profitPerDay.get(dateVideo) + videoEvent.getAmount()/100.0;
                 profitPerDay.put(dateVideo, newAmount);
             }
         }
         return profitPerDay;
     }
 
-    public Map<Date, Map<String, Integer>> getCookStatisticPerDay() {
-        Map<Date, Map<String, Integer>> cookPerDay = new TreeMap<>();
-        List<EventDataRow> cookEvents = statisticStorage.getStorage().get(EventType.COOKED_ORDER);
+    public Map<String, Map<String, Integer>> getCookStatisticPerDay() {
+        Map<String, Map<String, Integer>> cookPerDay = new TreeMap<>(Collections.reverseOrder());
+        List<EventDataRow> cookEvents = statisticStorage.getAllRowsOfType(EventType.COOKED_ORDER);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         for (EventDataRow eventDataRow : cookEvents) {
             CookedOrderEventDataRow cookEvent = (CookedOrderEventDataRow) eventDataRow;
-            Date date = cookEvent.getDate();
-            Map<String, Integer> cookDataMap = new TreeMap<>();
-            for (EventDataRow event1 : cookEvents) {
-                CookedOrderEventDataRow cookEvent1 = (CookedOrderEventDataRow) eventDataRow;
-                int time = cookEvent1.getTime();
-                String name = cookEvent1.getCookName();
-                if (cookEvent.getDate() == date) {
-                    if (!cookDataMap.containsKey(name)) {
-                        cookDataMap.put(name, time);
-                    } else {
-                        int newTime = cookDataMap.get(name) + cookEvent1.getTime();
-                        cookDataMap.put(name, newTime);
+            String dateKey = simpleDateFormat.format(cookEvent.getDate());
+            String cookName = cookEvent.getCookName();
+            Integer workTime = cookEvent.getTime();
+
+            if (workTime > 0) {
+                if (cookPerDay.containsKey(dateKey))
+                {
+                    //Получаем все записи с этой датой
+                    Map<String, Integer> cooks = cookPerDay.get(dateKey);
+                    //Если запись с поваром уже есть
+                    if (cooks.containsKey(cookName))
+                    {
+                        //Обновляем запись с новой суммой времени
+                        cooks.put(cookName, cooks.get(cookName) + cookEvent.getTime());
+                    }
+                    else
+                    {
+                        //Иначе добавляем нового повара
+                        cooks.put(cookName, cookEvent.getTime());
                     }
                 }
-
+                else {
+                    //Если записи с датой нет, то добавляем новую запись
+                    cookPerDay.put(dateKey, new TreeMap<>());
+                    cookPerDay.get(dateKey).put(cookName, cookEvent.getTime());
+                }
             }
-            cookPerDay.put(date, cookDataMap);
         }
 
         return cookPerDay;
@@ -77,8 +88,9 @@ public class StatisticManager {
     private class StatisticStorage {
         private Map<EventType, List<EventDataRow>> storage;
 
-        public Map<EventType, List<EventDataRow>> getStorage() {
-            return storage;
+        private List<EventDataRow> getAllRowsOfType(EventType eventType)
+        {
+            return storage.get(eventType);
         }
 
         public StatisticStorage() {

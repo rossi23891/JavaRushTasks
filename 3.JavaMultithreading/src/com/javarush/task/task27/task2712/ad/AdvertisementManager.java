@@ -29,9 +29,12 @@ public class AdvertisementManager {
         }
         List<Advertisement>checkAvailableHits =new ArrayList<>();
         for(Advertisement ad: storage.list()){
-            if(ad.getHits()>0){
+            if(ad.getDuration()<=timeSeconds && ad.getHits()>0){
                 checkAvailableHits.add(ad);
             }
+        }
+        if(checkAvailableHits.isEmpty()){
+            throw new NoVideoAvailableException();
         }
         List<Advertisement> videosToShow = findMostValuableAd(checkAvailableHits);
         Comparator<Advertisement> comparatorVideo = new Comparator<Advertisement>() {
@@ -46,16 +49,15 @@ public class AdvertisementManager {
             }
         };
         Collections.sort(videosToShow,comparatorVideo);
-        for (Advertisement ad : videosToShow) {
-            ConsoleHelper.writeMessage(ad.getName() + " is displaying... " + ad.getAmountPerOneDisplaying() + ", " + ad.getAmountPerOneDisplaying()*1000/(long)ad.getDuration());
-            ad.revalidate();
-        }
         if(videosToShow.size()>0){
             StatisticManager.getInstance().register(new VideoSelectedEventDataRow(videosToShow,calculateTotalAmount(videosToShow),calculateTolalDuration(videosToShow)));
         }else{
             StatisticManager.getInstance().register(new NoAvailableVideoEventDataRow(timeSeconds));
         }
-
+        for (Advertisement ad : videosToShow) {
+            ConsoleHelper.writeMessage(ad.getName() + " is displaying... " + ad.getAmountPerOneDisplaying() + ", " + ad.getAmountPerOneDisplaying()*1000/(long)ad.getDuration());
+            ad.revalidate();
+        }
     }
 
     public List<Advertisement> findMostValuableAd(List<Advertisement> totalVideos) {// лучший вариант
