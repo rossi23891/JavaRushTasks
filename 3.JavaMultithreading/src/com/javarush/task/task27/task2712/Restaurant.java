@@ -3,6 +3,7 @@ package com.javarush.task.task27.task2712;
 import com.javarush.task.task27.task2712.kitchen.Cook;
 import com.javarush.task.task27.task2712.kitchen.Waiter;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,11 @@ public class Restaurant {
         StatisticManager.getInstance().register(cook);
         StatisticManager.getInstance().register(cook2);
         List<Tablet> tabs = new ArrayList<>();
+        OrderManager orderManager = new OrderManager();
         for (int i = 1; i < 6 ; i++) {
             Tablet tablet = new Tablet(i);
             tabs.add(tablet);
-            tablet.addObserver(cook);
-            tablet.addObserver(cook2);
+            tablet.addObserver(orderManager);
         }
         cook.addObserver(new Waiter());
         cook2.addObserver(new Waiter());

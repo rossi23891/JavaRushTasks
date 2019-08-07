@@ -8,7 +8,7 @@ import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow
 import java.util.Observable;
 import java.util.Observer;
 
-public class Cook extends Observable implements Observer {
+public class Cook extends Observable{
     private String name;
 
     public Cook(String name) {
@@ -20,14 +20,11 @@ public class Cook extends Observable implements Observer {
         return name;
     }
 
-
-    @Override
-    public void update(Observable o, Object order) {
-        Tablet tablet = (Tablet)o;
-        Order order1 =(Order)order;
-        ConsoleHelper.writeMessage(String.format("Start cooking — %s", order1));
-        StatisticManager.getInstance().register(new CookedOrderEventDataRow(tablet.toString(),this.name,order1.getTotalCookingTime()*60,order1.getDishes()));
+    public void startCookingOrder(Order order){
+        ConsoleHelper.writeMessage(String.format("Start cooking — %s", order));
+        StatisticManager.getInstance().register(new CookedOrderEventDataRow(order.getTablet().toString(),this.name,order.getTotalCookingTime()*60,order.getDishes()));
         setChanged();
         notifyObservers(order);
     }
+
 }
