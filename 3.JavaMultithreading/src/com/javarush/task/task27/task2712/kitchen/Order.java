@@ -21,7 +21,7 @@ public class Order {//должна быть информация, относящ
 
     public Order(Tablet tablet) throws IOException {
         this.tablet = tablet;
-        dishes = ConsoleHelper.getAllDishesForOrder();
+        dishes=initDishes();
     }
 
     @Override
@@ -44,5 +44,11 @@ public class Order {//должна быть информация, относящ
         }
         return totalTime;
     }
+
+    protected List<Dish> initDishes() throws IOException {
+        dishes = ConsoleHelper.getAllDishesForOrder();
+        return dishes;
+    }
+
 
 }
