@@ -3,18 +3,18 @@ package com.javarush.task.task27.task2712;
 import java.util.List;
 
 public class RandomOrderGeneratorTask implements Runnable {
-    List<Tablet> allTabList;
+    List<Tablet> tablets;
     Tablet selectedTablet;
     private  int interval;
 
-    public RandomOrderGeneratorTask(List<Tablet> allTabList, int interval) {
-        this.allTabList = allTabList;
+    public RandomOrderGeneratorTask(List<Tablet> tablets, int interval) {
+        this.tablets = tablets;
         this.interval = interval;
     }
 
     @Override
     public void run() {
-        selectedTablet = allTabList.get((int) (Math.random() * allTabList.size()));
+        selectedTablet = tablets.get((int) (Math.random() * tablets.size()));
         try {
             Thread.sleep(interval);
             selectedTablet.createTestOrder();
