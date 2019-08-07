@@ -1,8 +1,9 @@
 package com.javarush.task.task27.task2712;
 
+import com.javarush.task.task27.task2712.ad.Advertisement;
+import com.javarush.task.task27.task2712.ad.StatisticAdvertisementManager;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DirectorTablet {
@@ -36,10 +37,30 @@ public class DirectorTablet {
     }
 
     public void printActiveVideoSet(){
-
+        List<Advertisement> activeVideos = StatisticAdvertisementManager.getInstance().getActiveVideoFromStorage();
+        Comparator<Advertisement> advertisementComparator = new Comparator<Advertisement>() {
+            @Override
+            public int compare(Advertisement o1, Advertisement o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        };
+        Collections.sort(activeVideos,advertisementComparator);
+        for (Advertisement activeVideo : activeVideos) {
+            ConsoleHelper.writeMessage(String.format("%s - %d", activeVideo.getName(), activeVideo.getHits()));
+        }
     }
 
     public void printArchivedVideoSet(){
-
+        List<Advertisement> inactiveVideos = StatisticAdvertisementManager.getInstance().getInactiveVideoFromStorage();
+        Comparator<Advertisement> advertisementComparator = new Comparator<Advertisement>() {
+            @Override
+            public int compare(Advertisement o1, Advertisement o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        };
+        Collections.sort(inactiveVideos,advertisementComparator);
+        for (Advertisement inactiveVideo : inactiveVideos) {
+            ConsoleHelper.writeMessage(inactiveVideo.getName());
+        }
     }
 }

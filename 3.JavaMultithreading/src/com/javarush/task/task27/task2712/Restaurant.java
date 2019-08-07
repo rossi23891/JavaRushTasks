@@ -12,21 +12,16 @@ public class Restaurant {
         tablet.addObserver(cook);
         cook.addObserver(new Waiter());
         tablet.createOrder();
-        //tablet.createOrder();
-        /*tablet.createOrder();
-        tablet.createOrder();*/
+        tablet.createOrder();
+        tablet.createOrder();
+        tablet.createOrder();
 
         DirectorTablet directorTablet = new DirectorTablet();
-        directorTablet.printActiveVideoSet();
-
-        directorTablet.printArchivedVideoSet();
-
-
-        /*Map<Date,Double> mapa = StatisticManager.getInstance().getAdvertisementProfitDataPerDay(StatisticManager.getInstance().get());
-        System.out.println(mapa.toString());
-        System.out.println("----------------------------");*/
         directorTablet.printAdvertisementProfit();
         //System.out.println("???????????????????????????????");
         directorTablet.printCookWorkloading();
+        directorTablet.printActiveVideoSet();
+        System.out.println("------------");
+        directorTablet.printArchivedVideoSet();
     }
 }
