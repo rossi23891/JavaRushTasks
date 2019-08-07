@@ -25,6 +25,10 @@ public class StatisticManager {
         statisticStorage.put(data);
     }
 
+    public Set<Cook> getCooks() {
+        return cooks;
+    }
+
     public void register(Cook cook) {
         cooks.add(cook);
     }
