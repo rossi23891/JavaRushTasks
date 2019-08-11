@@ -13,6 +13,10 @@ public class Model {// game field manipulations
         resetGameTiles();
     }
 
+    public Tile[][] getGameTiles() {
+        return gameTiles;
+    }
+
     public void resetGameTiles(){
         for (int row = 0; row <gameTiles.length ; row++) {
             for (int col = 0; col < gameTiles[0].length; col++) {
@@ -99,5 +103,59 @@ public class Model {// game field manipulations
         if(isChanged){
             addTile();
         }
+    }
+
+    public void right(){
+        rotateClockwise();
+        rotateClockwise();
+        left();
+        rotateClockwise();
+        rotateClockwise();
+    }
+    public void up(){
+        rotateClockwise();
+        rotateClockwise();
+        rotateClockwise();
+        left();
+        rotateClockwise();
+    }
+
+    public void down(){
+        rotateClockwise();
+        left();
+        rotateClockwise();
+        rotateClockwise();
+        rotateClockwise();
+    }
+
+    private void rotateClockwise(){
+        Tile[][] temp = new Tile[FIELD_WIDTH][FIELD_WIDTH];
+        for (int row = 0; row<FIELD_WIDTH; row++) {
+            for (int col = 0; col <FIELD_WIDTH ; col++) {
+                temp[row][col]=gameTiles[FIELD_WIDTH-1-col][row];
+            }
+        }
+        gameTiles=temp;
+    }
+
+    public boolean canMove(){
+        if(!getEmptyTiles().isEmpty()){
+            return true;
+        }
+        for (int row = 0; row<FIELD_WIDTH; row++) {// check  possible rows merge
+            for (int col = 0; col <FIELD_WIDTH-1 ; col++) {
+                if(gameTiles[row][col].value==gameTiles[row][col+1].value){
+                    return true;
+                }
+            }
+        }
+        for (int col = 0; col<FIELD_WIDTH; col++) {// check possible columns merge
+            for (int row = 0; row <FIELD_WIDTH-1 ; row++) {
+                if(gameTiles[row][col].value==gameTiles[row+1][col].value){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
