@@ -80,4 +80,24 @@ public class Model {// game field manipulations
         compressTiles(tiles);
         return isMerged;
     }
+
+    public void left(){
+        boolean isChanged=false;
+
+        for (int r = 0; r < gameTiles.length; r++) {
+            Tile[] rowSet = gameTiles[r];
+            if(compressTiles(rowSet)){
+                isChanged=true;
+            }
+            if(mergeTiles(rowSet)){
+                isChanged=true;
+            }
+            if(compressTiles(rowSet)){
+                isChanged=true;
+            }
+        }
+        if(isChanged){
+            addTile();
+        }
+    }
 }
