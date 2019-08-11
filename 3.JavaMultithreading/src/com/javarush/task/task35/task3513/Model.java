@@ -8,11 +8,17 @@ public class Model {// game field manipulations
     private Tile[][] gameTiles=new Tile[FIELD_WIDTH][FIELD_WIDTH];
 
     public Model() {
+        resetGameTiles();
+    }
+
+    public void resetGameTiles(){
         for (int row = 0; row <gameTiles.length ; row++) {
             for (int col = 0; col < gameTiles[0].length; col++) {
                 gameTiles[row][col] = new Tile();
             }
         }
+        addTile();
+        addTile();
     }
 
     private List<Tile> getEmptyTiles(){
@@ -27,7 +33,11 @@ public class Model {// game field manipulations
         return emptyTiles;
     }
 
-    private void addTile(List<Tile> emptyTiles){
-        Tile toBeAdded = emptyTiles.get((int)(emptyTiles.size()*Math.random()));
+    private void addTile() {
+        List<Tile> emptyTiles = getEmptyTiles();
+        if (!emptyTiles.isEmpty()) {
+            Tile toBeAdded = emptyTiles.get((int) (emptyTiles.size() * Math.random()));
+            toBeAdded.setValue(Math.random() < 0.9 ? 2 : 4);
+        }
     }
 }

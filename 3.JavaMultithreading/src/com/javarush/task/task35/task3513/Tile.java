@@ -17,6 +17,10 @@ public class Tile {//плитка.Кроме веса у плитки еще б�
         return value == 0;
     }
 
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     public Color getFontColor() {
         if (value < 16) {
             return new Color(0x776e65);
