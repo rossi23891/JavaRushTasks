@@ -208,4 +208,26 @@ public class Model {// game field manipulations
                 break;
         }
     }
+
+    public boolean hasBoardChanged(){
+        if(previousStates.isEmpty()){
+            return false;
+        }
+        Tile[][] tileForCompare = previousStates.peek();
+        return calculateTotalValue(tileForCompare)!=calculateTotalValue(gameTiles);
+    }
+
+    public int calculateTotalValue(Tile[][] tiles){
+        int totalValue=0;
+        for (int row = 0; row < FIELD_WIDTH; row++) {
+            for (int col = 0; col < FIELD_WIDTH; col++) {
+                totalValue+=tiles[row][col].value;
+            }
+        }
+       return totalValue;
+    }
+
+    public MoveEfficiency getMoveEfficiency(Move move){
+
+    }
 }
