@@ -6,7 +6,7 @@ import java.util.Stack;
 
 public class Model {// game field manipulations
     private static final int FIELD_WIDTH = 4;
-    private Tile[][] gameTiles=new Tile[FIELD_WIDTH][FIELD_WIDTH];
+    private Tile[][] gameTiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
     public int score;
     public int maxTile;
     Stack<Tile[][]> previousStates = new Stack<>();
@@ -21,23 +21,23 @@ public class Model {// game field manipulations
         return gameTiles;
     }
 
-    public void resetGameTiles(){
-        for (int row = 0; row <gameTiles.length ; row++) {
+    public void resetGameTiles() {
+        for (int row = 0; row < gameTiles.length; row++) {
             for (int col = 0; col < gameTiles[0].length; col++) {
                 gameTiles[row][col] = new Tile();
             }
         }
-        score=0;
-        maxTile=0;
+        score = 0;
+        maxTile = 0;
         addTile();
         addTile();
     }
 
-    private List<Tile> getEmptyTiles(){
+    private List<Tile> getEmptyTiles() {
         List<Tile> emptyTiles = new ArrayList<>();
-        for (int row = 0; row <gameTiles.length ; row++) {
+        for (int row = 0; row < gameTiles.length; row++) {
             for (int col = 0; col < gameTiles[0].length; col++) {
-                if(gameTiles[row][col].value==0){
+                if (gameTiles[row][col].value == 0) {
                     emptyTiles.add(gameTiles[row][col]);
                 }
             }
@@ -53,15 +53,15 @@ public class Model {// game field manipulations
         }
     }
 
-    private boolean compressTiles(Tile[] tiles){
+    private boolean compressTiles(Tile[] tiles) {
         boolean isCompressed = false;
-        for (int i = 0; i < tiles.length-1; i++) {
-            if(tiles[i].value==0){
-                for (int j = i+1; j < tiles.length; j++) {
-                    if(tiles[j].value!=0){
+        for (int i = 0; i < tiles.length - 1; i++) {
+            if (tiles[i].value == 0) {
+                for (int j = i + 1; j < tiles.length; j++) {
+                    if (tiles[j].value != 0) {
                         tiles[i].setValue(tiles[j].value);
-                        tiles[j].value=0;
-                        isCompressed=true;
+                        tiles[j].value = 0;
+                        isCompressed = true;
                         break;
                     }
                 }
@@ -70,18 +70,18 @@ public class Model {// game field manipulations
         return isCompressed;
     }
 
-    private boolean mergeTiles(Tile[] tiles){
+    private boolean mergeTiles(Tile[] tiles) {
         boolean isMerged = false;
-        for (int i = 0; i < tiles.length-1; i++) {
-            if(tiles[i].value!=0){
-                if(tiles[i].value==tiles[i+1].value){
-                    tiles[i].setValue(tiles[i].value+tiles[i+1].value);
-                    tiles[i+1].setValue(0);
-                    score+=tiles[i].value;
-                    if(tiles[i].value>maxTile){
-                       maxTile = tiles[i].value;
+        for (int i = 0; i < tiles.length - 1; i++) {
+            if (tiles[i].value != 0) {
+                if (tiles[i].value == tiles[i + 1].value) {
+                    tiles[i].setValue(tiles[i].value + tiles[i + 1].value);
+                    tiles[i + 1].setValue(0);
+                    score += tiles[i].value;
+                    if (tiles[i].value > maxTile) {
+                        maxTile = tiles[i].value;
                     }
-                    isMerged=true;
+                    isMerged = true;
                 }
             }
         }
@@ -89,34 +89,41 @@ public class Model {// game field manipulations
         return isMerged;
     }
 
-    public void left(){
-        boolean isChanged=false;
+    public void left() {
+        if (isSaveNeeded) {
+            saveState(gameTiles);
+        }
+        boolean isChanged = false;
 
         for (int r = 0; r < gameTiles.length; r++) {
             Tile[] rowSet = gameTiles[r];
-            if(compressTiles(rowSet)){
-                isChanged=true;
+            if (compressTiles(rowSet)) {
+                isChanged = true;
             }
-            if(mergeTiles(rowSet)){
-                isChanged=true;
+            if (mergeTiles(rowSet)) {
+                isChanged = true;
             }
-            if(compressTiles(rowSet)){
-                isChanged=true;
+            if (compressTiles(rowSet)) {
+                isChanged = true;
             }
         }
-        if(isChanged){
+        if (isChanged) {
             addTile();
         }
+        isSaveNeeded = true;
     }
 
-    public void right(){
+    public void right() {
+        saveState(gameTiles);
         rotateClockwise();
         rotateClockwise();
         left();
         rotateClockwise();
         rotateClockwise();
     }
-    public void up(){
+
+    public void up() {
+        saveState(gameTiles);
         rotateClockwise();
         rotateClockwise();
         rotateClockwise();
@@ -124,7 +131,8 @@ public class Model {// game field manipulations
         rotateClockwise();
     }
 
-    public void down(){
+    public void down() {
+        saveState(gameTiles);
         rotateClockwise();
         left();
         rotateClockwise();
@@ -132,30 +140,30 @@ public class Model {// game field manipulations
         rotateClockwise();
     }
 
-    private void rotateClockwise(){
+    private void rotateClockwise() {
         Tile[][] temp = new Tile[FIELD_WIDTH][FIELD_WIDTH];
-        for (int row = 0; row<FIELD_WIDTH; row++) {
-            for (int col = 0; col <FIELD_WIDTH ; col++) {
-                temp[row][col]=gameTiles[FIELD_WIDTH-1-col][row];
+        for (int row = 0; row < FIELD_WIDTH; row++) {
+            for (int col = 0; col < FIELD_WIDTH; col++) {
+                temp[row][col] = gameTiles[FIELD_WIDTH - 1 - col][row];
             }
         }
-        gameTiles=temp;
+        gameTiles = temp;
     }
 
-    public boolean canMove(){
-        if(!getEmptyTiles().isEmpty()){
+    public boolean canMove() {
+        if (!getEmptyTiles().isEmpty()) {
             return true;
         }
-        for (int row = 0; row<FIELD_WIDTH; row++) {// check  possible rows merge
-            for (int col = 0; col <FIELD_WIDTH-1 ; col++) {
-                if(gameTiles[row][col].value==gameTiles[row][col+1].value){
+        for (int row = 0; row < FIELD_WIDTH; row++) {// check  possible rows merge
+            for (int col = 0; col < FIELD_WIDTH - 1; col++) {
+                if (gameTiles[row][col].value == gameTiles[row][col + 1].value) {
                     return true;
                 }
             }
         }
-        for (int col = 0; col<FIELD_WIDTH; col++) {// check possible columns merge
-            for (int row = 0; row <FIELD_WIDTH-1 ; row++) {
-                if(gameTiles[row][col].value==gameTiles[row+1][col].value){
+        for (int col = 0; col < FIELD_WIDTH; col++) {// check possible columns merge
+            for (int row = 0; row < FIELD_WIDTH - 1; row++) {
+                if (gameTiles[row][col].value == gameTiles[row + 1][col].value) {
                     return true;
                 }
             }
@@ -164,12 +172,11 @@ public class Model {// game field manipulations
     }
 
 
-
-    private void saveState(Tile[][] tiles){
+    private void saveState(Tile[][] tiles) {
         Tile[][] gameTilesCopy = new Tile[FIELD_WIDTH][FIELD_WIDTH];
-        for (int row = 0; row<FIELD_WIDTH; row++) {
-            for (int col = 0; col <FIELD_WIDTH; col++) {
-                gameTilesCopy[row][col]=tiles[row][col];
+        for (int row = 0; row < FIELD_WIDTH; row++) {
+            for (int col = 0; col < FIELD_WIDTH; col++) {
+                gameTilesCopy[row][col] = new Tile(tiles[row][col].value);
             }
         }
         previousStates.push(gameTilesCopy);
@@ -177,12 +184,28 @@ public class Model {// game field manipulations
         isSaveNeeded = false;
     }
 
-    public void rollback(){
-        if(!previousScores.isEmpty() && !previousStates.isEmpty()){
-            gameTiles=previousStates.pop();
-            score=previousScores.pop();
+    public void rollback() { // откат изменений
+        if (!previousScores.isEmpty() && !previousStates.isEmpty()) {
+            gameTiles = previousStates.pop();
+            score = previousScores.pop();
         }
+    }
 
-
+    public void randomMove() {
+        int n = ((int) (Math.random() * 100)) % 4;
+        switch (n) {
+            case 0:
+                left();
+                break;
+            case 1:
+                right();
+                break;
+            case 2:
+                up();
+                break;
+            case 3:
+                down();
+                break;
+        }
     }
 }
