@@ -228,6 +228,23 @@ public class Model {// game field manipulations
     }
 
     public MoveEfficiency getMoveEfficiency(Move move){
+        move.move();
+        MoveEfficiency efficiency;
+        if(!hasBoardChanged()){
+            rollback();
+            return new MoveEfficiency(-1,0,move);
+        }
+        int emptyTilesNumber = 0;
+        for (int row = 0; row < FIELD_WIDTH; row++) {
+            for (int col = 0; col < FIELD_WIDTH; col++) {
+                if(gameTiles[row][col].value==0){
+                    emptyTilesNumber++;
+                }
+            }
+        }
+        efficiency = new MoveEfficiency(emptyTilesNumber,score,move);
+        rollback();
+        return efficiency;
 
     }
 }
