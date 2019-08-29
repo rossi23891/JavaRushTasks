@@ -8,7 +8,7 @@ import java.util.*;
 */
 public class CustomTree extends AbstractList<String> implements Cloneable, Serializable {
     Entry<String> root;
-    Deque<Entry<String>> nodes = new LinkedList<>();
+    Queue<Entry<String>> nodes = new LinkedList<>();
     int size = -1;
 
     public void initialize(){
@@ -32,12 +32,12 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
             if(current.availableToAddLeftChildren){
              current.setLeftChild(newNode);
              newNode.setParent(current);
-             ((LinkedList<Entry<String>>) nodes).addLast(newNode);
+             ((LinkedList<Entry<String>>) nodes).add(newNode);
              return true;
             }else {
                 current.setRightChild(newNode);
                 newNode.setParent(current);
-                ((LinkedList<Entry<String>>) nodes).addLast(newNode);
+                ((LinkedList<Entry<String>>) nodes).add(newNode);
                 return true;
             }
         }
@@ -46,8 +46,8 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
 
     public String getParent(String s){
         String parentName;
-        Deque<Entry<String>>nodes=new LinkedList<>();
-        ((LinkedList<Entry<String>>) nodes).addLast(root);
+        Queue<Entry<String>>nodes=new LinkedList<>();
+        ((LinkedList<Entry<String>>) nodes).add(root);
         if(root.elementName.equals(s)){
             return null;
         }else{
@@ -56,30 +56,30 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
         return parentName;
     }
 
-    public String traversePreOrderToFindParent(Deque<Entry<String>>nodes,String s) {
+    public String traversePreOrderToFindParent(Queue<Entry<String>>nodes,String s) {
         while (!nodes.isEmpty()){
-            Entry<String>node =nodes.removeFirst();
+            Entry<String>node =nodes.remove();
             if(node.elementName.equals(s)){
                 return node.getParent().elementName;
             }
             if(node.leftChild!=null){
-                nodes.addLast(node.leftChild);
+                nodes.add(node.leftChild);
             }
             if(node.rightChild!=null){
-                nodes.addLast(node.rightChild);
+                nodes.add(node.rightChild);
             }
         }
         return null;
     }
-    public void traversePreOrderToFindSize(Deque<Entry<String>>nodes) {
+    public void traversePreOrderToFindSize(Queue<Entry<String>>nodes) {
         while (!nodes.isEmpty()){
-            Entry<String>node =nodes.removeFirst();
+            Entry<String>node =nodes.remove();
             size++;
             if(node.leftChild!=null){
-                nodes.addLast(node.leftChild);
+                nodes.add(node.leftChild);
             }
             if(node.rightChild!=null){
-                nodes.addLast(node.rightChild);
+                nodes.add(node.rightChild);
             }
         }
     }
@@ -91,8 +91,8 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
 
     @Override
     public int size() {
-        Deque<Entry<String>>nodes=new LinkedList<>();
-        ((LinkedList<Entry<String>>) nodes).addLast(root);
+        Queue<Entry<String>>nodes=new LinkedList<>();
+        ((LinkedList<Entry<String>>) nodes).add(root);
         traversePreOrderToFindSize(nodes);
         return size;
     }
