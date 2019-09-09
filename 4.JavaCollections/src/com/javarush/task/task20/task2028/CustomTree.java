@@ -10,6 +10,7 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
     Entry<String> root;
     Queue<Entry<String>> nodes = new LinkedList<>();
     int size = -1;
+    int totalPriority = 0;
 
     public void initialize(){
         ((LinkedList<Entry<String>>) nodes).add(root);
@@ -23,12 +24,20 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
     @Override
     public boolean add(String s) {
         while(!nodes.isEmpty()){
-            Entry<String> current = nodes.peek();
+            int min = nodes.size();
+            Entry<String> current=nodes.peek();
+            for (Entry<String> node : nodes) {
+                if(node.getPriority()<=min){
+                    min = node.getPriority();
+                    current=node;
+                }
+            }
             if(!current.isAvailableToAddChildren()){
                 nodes.remove(current);
                 continue;
             }
             Entry<String> newNode = new Entry<>(s);
+            newNode.setPriority(++totalPriority);
             if(current.availableToAddLeftChildren){
              current.setLeftChild(newNode);
              newNode.setParent(current);
@@ -187,6 +196,7 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
         Entry<T> parent;
         Entry<T> leftChild;
         Entry<T> rightChild;
+        int priority;
 
         public Entry(String elementName) {
             this.elementName = elementName;
@@ -214,6 +224,14 @@ public class CustomTree extends AbstractList<String> implements Cloneable, Seria
         public void setRightChild(Entry<T> rightChild) {
             this.rightChild = rightChild;
             this.availableToAddRightChildren = false;
+        }
+
+        public int getPriority() {
+            return priority;
+        }
+
+        public void setPriority(int priority) {
+            this.priority = priority;
         }
     }
 }
