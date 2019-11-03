@@ -15,11 +15,11 @@ public class Space {
     //Космический корабль
     private SpaceShip ship;
     //Список НЛО
-    private List<Ufo> ufos = new ArrayList<Ufo>();
+    private ArrayList<Ufo> ufos = new ArrayList<Ufo>();
     //Список бомб
-    private List<Bomb> bombs = new ArrayList<Bomb>();
+    private ArrayList<Bomb> bombs = new ArrayList<Bomb>();
     //Список ракет
-    private List<Rocket> rockets = new ArrayList<Rocket>();
+    private ArrayList<Rocket> rockets = new ArrayList<Rocket>();
 
     public Space(int width, int height) {
         this.width = width;
@@ -207,7 +207,7 @@ public class Space {
         this.ship = ship;
     }
 
-    public List<Ufo> getUfos() {
+    public ArrayList<Ufo> getUfos() {
         return ufos;
     }
 
@@ -219,11 +219,11 @@ public class Space {
         return height;
     }
 
-    public List<Bomb> getBombs() {
+    public ArrayList<Bomb> getBombs() {
         return bombs;
     }
 
-    public List<Rocket> getRockets() {
+    public ArrayList<Rocket> getRockets() {
         return rockets;
     }
 
