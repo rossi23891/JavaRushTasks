@@ -1,6 +1,7 @@
 package com.javarush.task.task21.task2104;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /* 
@@ -16,12 +17,12 @@ public class Solution {
 
     public boolean equals(Object n) {
         if (this == n) return true;
-        if (n == null || !(n instanceof Solution)) return false;
+        if (n == null || n.getClass()!=this.getClass()) return false;
         Solution solution = (Solution)n;
-        if(solution.first!=null? !solution.first.equals(first):first!=null){
+        if(!Objects.equals(solution.first, first)){
             return false;
         }
-        if(solution.last!=null? !solution.last.equals(last):last!=null){
+        if(!Objects.equals(solution.last, last)){
             return false;
         }
 
