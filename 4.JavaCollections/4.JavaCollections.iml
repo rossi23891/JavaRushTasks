@@ -19,5 +19,12 @@
     <orderEntry type="library" name="junit:junit:4.12" level="project" />
     <orderEntry type="library" name="jsoup-1.13.1" level="project" />
     <orderEntry type="library" name="jsoup-1.13.1-sources" level="project" />
+    <orderEntry type="library" name="httpclient-4.5.12" level="project" />
+    <orderEntry type="library" name="httpcore5-5.0" level="project" />
+    <orderEntry type="library" name="org.apache.httpcomponents:httpcore:4.4.12" level="application" />
+    <orderEntry type="library" name="org.apache.httpcomponents:httpclient:4.5.10" level="application" />
+    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
+    <orderEntry type="library" name="demo" level="application" />
+    <orderEntry type="library" name="javax.mail:javax.mail-api:1.4.7" level="project" />
   </component>
 </module>
